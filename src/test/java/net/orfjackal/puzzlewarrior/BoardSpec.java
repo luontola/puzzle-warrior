@@ -1,5 +1,6 @@
 package net.orfjackal.puzzlewarrior;
 
+import jdave.Block;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
@@ -50,15 +51,58 @@ public class BoardSpec extends Specification<Board> {
 
         public void stopsWhenItReachesTheBottom() {
             board.tick(3);
+            specify(should.be.falling());
             specify(board.toString(), does.equal("......\n" +
                                                  "......\n" +
                                                  "...g..\n" +
                                                  "...b..\n"));
             board.tick();
+            specify(should.not().be.falling());
             specify(board.toString(), does.equal("......\n" +
                                                  "......\n" +
                                                  "...g..\n" +
                                                  "...b..\n"));
+        }
+
+        public void stopsWhenItHitsAnotherBlock() {
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.addBlock('r', 'y');
+            specify(board.toString(), does.equal("...r..\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.tick();
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("...y..\n" +
+                                                 "...r..\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("...y..\n" +
+                                                 "...r..\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+        }
+
+        public void allowsAtMostOneFallingBlockAtATime() {
+            specify(board.toString(), does.equal("...b..\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            specify(new Block() {
+                public void run() throws Throwable {
+                    board.addBlock('r', 'y');
+                }
+            }, does.raise(IllegalStateException.class));
+            specify(board.toString(), does.equal("...b..\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "......\n"));
         }
     }
 }
