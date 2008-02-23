@@ -89,7 +89,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "...b..\n"));
         }
 
-        public void allowsAtMostOneFallingBlockAtATime() {
+        public void atMostOneBlockMayBeFallingAtATime() {
             specify(board.toString(), does.equal("...b..\n" +
                                                  "......\n" +
                                                  "......\n" +
@@ -104,6 +104,19 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "......\n"));
         }
+
+//        public void mayBeRotatedClockwise() {
+//            board.tick();
+//            specify(board.toString(), does.equal("...g..\n" +
+//                                                 "...b..\n" +
+//                                                 "......\n" +
+//                                                 "......\n"));
+//            board.rotateRight();
+//            specify(board.toString(), does.equal("......\n" +
+//                                                 "...bg.\n" +
+//                                                 "......\n" +
+//                                                 "......\n"));
+//        }
 
         // TODO: rotations
         // TODO: breaks when hits blocks sideways

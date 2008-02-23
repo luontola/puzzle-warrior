@@ -9,7 +9,7 @@ public class Board {
     private static final char EMPTY = '\0';
 
     private char[][] board;
-    private char[] falling;
+    private char[][] falling;
     private int fallingRow;
     private int fallingCol;
 
@@ -17,11 +17,15 @@ public class Board {
         board = new char[rows][cols];
     }
 
-    public void addBlock(char type1, char type2) {
+    public void addBlock(char piece1, char piece2) {
         if (falling != null) {
             throw new IllegalStateException("There is already a falling block");
         }
-        falling = new char[]{type1, type2};
+        falling = new char[][]{
+                {0, piece2, 0},
+                {0, piece1, 0},
+                {0, 0, 0},
+        };
         fallingRow = 0;
         fallingCol = board[0].length / 2;
     }
@@ -52,8 +56,8 @@ public class Board {
     }
 
     private void stopFalling() {
-        board[fallingRow][fallingCol] = falling[0];
-        board[fallingRow - 1][fallingCol] = falling[1];
+        board[fallingRow - 1][fallingCol] = falling[0][1];
+        board[fallingRow][fallingCol] = falling[1][1];
         falling = null;
     }
 
@@ -81,6 +85,10 @@ public class Board {
     }
 
     private char fallingBlockFrom(int row) {
-        return falling[fallingRow - row];
+        int i = 1 - fallingRow + row;
+        return falling[i][1];
+    }
+
+    public void rotateRight() {
     }
 }
