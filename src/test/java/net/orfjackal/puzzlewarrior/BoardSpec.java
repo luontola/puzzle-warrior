@@ -104,5 +104,12 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "......\n"));
         }
+
+        // TODO: rotations
+        // TODO: breaks when hits blocks sideways
+        // TODO: move left and right
+        // TODO: move down
+        // TODO: explosive blocks blow same color
+        // TODO: explosive diamonds blow touched color
     }
 }
