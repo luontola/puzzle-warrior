@@ -28,13 +28,14 @@ public class BoardSpec extends Specification<Board> {
     public class AFallingBlock {
 
         public Board create() {
-            board = new Board(3, 6);
+            board = new Board(4, 6);
             board.addBlock('b', 'g');
             return board;
         }
 
         public void startsFromTheTopMiddle() {
             specify(board.toString(), does.equal("...b..\n" +
+                                                 "......\n" +
                                                  "......\n" +
                                                  "......\n"));
         }
@@ -43,7 +44,23 @@ public class BoardSpec extends Specification<Board> {
             board.tick();
             specify(board.toString(), does.equal("...g..\n" +
                                                  "...b..\n" +
+                                                 "......\n" +
                                                  "......\n"));
+        }
+
+        public void stopsWhenItReachesTheBottom() {
+            board.tick();
+            board.tick();
+            board.tick();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.tick();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
         }
     }
 }

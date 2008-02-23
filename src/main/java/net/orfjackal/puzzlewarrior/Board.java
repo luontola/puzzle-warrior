@@ -19,9 +19,11 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
-                char cell = '.';
+                char cell = board[row][col];
                 if (isFallingBlock(row, col)) {
                     cell = getFallingBlock(row);
+                } else if (cell == '\0') {
+                    cell = '.';
                 }
                 sb.append(cell);
             }
@@ -47,5 +49,14 @@ public class Board {
 
     public void tick() {
         fallingRow++;
+        if (fallingRow == board.length - 1) {
+            stopFalling();
+        }
+    }
+
+    private void stopFalling() {
+        board[fallingRow][fallingCol] = falling[0];
+        board[fallingRow - 1][fallingCol] = falling[1];
+        falling = null;
     }
 }
