@@ -54,6 +54,12 @@ public class Board {
         }
     }
 
+    public void tick(int count) {
+        for (int i = 0; i < count; i++) {
+            tick();
+        }
+    }
+
     private void stopFalling() {
         board[fallingRow][fallingCol] = falling[0];
         board[fallingRow - 1][fallingCol] = falling[1];

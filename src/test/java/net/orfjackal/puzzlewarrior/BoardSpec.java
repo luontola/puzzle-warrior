@@ -49,9 +49,7 @@ public class BoardSpec extends Specification<Board> {
         }
 
         public void stopsWhenItReachesTheBottom() {
-            board.tick();
-            board.tick();
-            board.tick();
+            board.tick(3);
             specify(board.toString(), does.equal("......\n" +
                                                  "......\n" +
                                                  "...g..\n" +
