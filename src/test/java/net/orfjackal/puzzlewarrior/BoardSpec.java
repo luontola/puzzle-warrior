@@ -531,7 +531,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "..grg.\n"));
         }
         
-        public void explodeOnlySelfWhenAboveNothing() {
+        public void explodeOnlyThemselvesWhenAboveNothing() {
             board.dropNewBlock('*', 'r');
             board.moveRight();
             board.moveRight();
