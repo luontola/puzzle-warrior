@@ -9,7 +9,7 @@ public class Board {
     public static final char EMPTY = '\0';
 
     private char[][] board;
-    private Shape falling;
+    private Block falling;
 
     public Board(int rows, int cols) {
         board = new char[rows][cols];
@@ -27,17 +27,17 @@ public class Board {
         return board[0].length;
     }
 
-    public char blockAt(int row, int col) {
+    public char pieceAt(int row, int col) {
         return board[row][col];
     }
 
-    public void addFallingBlock(char piece1, char piece2) {
+    public void dropNewBlock(char piece1, char piece2) {
         if (falling()) {
             throw new IllegalStateException("There is already a falling block");
         }
         int row = 0;
         int col = columns() / 2;
-        falling = new Shape(piece1, piece2, row, col);
+        falling = new Block(piece1, piece2, row, col);
     }
 
     public void tick(int count) {
@@ -57,12 +57,12 @@ public class Board {
     }
 
     private void stopFalling() {
-        Shape[] columns = falling.breakToColumns();
-        for (Shape c : columns) {
-            while (c.canMoveDown(this)) {
-                c.moveDown();
+        Block[] columns = falling.breakToColumns();
+        for (Block b : columns) {
+            while (b.canMoveDown(this)) {
+                b.moveDown();
             }
-            c.copyTo(board);
+            b.copyTo(board);
         }
         falling = null;
     }
@@ -96,8 +96,8 @@ public class Board {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 char cell = board[row][col];
-                if (falling != null && falling.hasBlockAt(row, col)) {
-                    cell = falling.blockAt(row, col);
+                if (falling != null && falling.hasPieceAt(row, col)) {
+                    cell = falling.pieceAt(row, col);
                 } else if (cell == EMPTY) {
                     cell = '.';
                 }

@@ -30,7 +30,7 @@ public class BoardSpec extends Specification<Board> {
 
         public Board create() {
             board = new Board(4, 6);
-            board.addFallingBlock('b', 'g');
+            board.dropNewBlock('b', 'g');
             return board;
         }
 
@@ -87,7 +87,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "...g..\n" +
                                                  "...b..\n"));
-            board.addFallingBlock('r', 'y');
+            board.dropNewBlock('r', 'y');
             specify(board.toString(), does.equal("...r..\n" +
                                                  "......\n" +
                                                  "...g..\n" +
@@ -112,7 +112,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "...g..\n" +
                                                  "...b..\n"));
-            board.addFallingBlock('r', 'y');
+            board.dropNewBlock('r', 'y');
             board.rotateClockwise();
             specify(board.toString(), does.equal("...ry.\n" +
                                                  "......\n" +
@@ -139,7 +139,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
             specify(new Block() {
                 public void run() throws Throwable {
-                    board.addFallingBlock('r', 'y');
+                    board.dropNewBlock('r', 'y');
                 }
             }, does.raise(IllegalStateException.class));
             specify(board.toString(), does.equal("...b..\n" +
