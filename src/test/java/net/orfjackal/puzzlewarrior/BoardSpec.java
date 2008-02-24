@@ -335,4 +335,46 @@ public class BoardSpec extends Specification<Board> {
         // TODO: explosive blocks blow same color
         // TODO: explosive diamonds blow touched color
     }
+
+    public class ExplosiveBlocks {
+
+        public Board create() {
+            board = new Board(4, 6);
+            board.dropNewBlock('b', 'g');
+            board.rotateClockwise();
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "...bg.\n"));
+            return board;
+        }
+
+//        public void explodeBlocksOfTheSameColorWhenTouchingThem() {
+//            board.dropNewBlock('B', 'g');
+//            board.tick(2);
+//            specify(should.be.falling());
+//            specify(board.toString(), does.equal("......\n" +
+//                                                 "...g..\n" +
+//                                                 "...B..\n" +
+//                                                 "...bg.\n"));
+//            board.tick();
+//            specify(should.not().be.falling());
+//            specify(board.toString(), does.equal("......\n" +
+//                                                 "......\n" +
+//                                                 "......\n" +
+//                                                 "...gg.\n"));
+//        }
+
+        public void doNothingWhenTouchingBlocksOfADifferentColor() {
+            board.dropNewBlock('G', 'b');
+            board.tick(3);
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...b..\n" +
+                                                 "...G..\n" +
+                                                 "...bg.\n"));
+        }
+
+    }
 }
