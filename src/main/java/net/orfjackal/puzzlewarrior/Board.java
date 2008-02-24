@@ -9,8 +9,6 @@ import java.util.TreeSet;
  */
 public class Board {
 
-    public static final char EMPTY = '\0';
-
     private final int rows;
     private final int columns;
     private final SortedSet<Block> stopped = new TreeSet<Block>();
@@ -39,7 +37,7 @@ public class Board {
                 return b.pieceAt(row, col);
             }
         }
-        return EMPTY;
+        return Block.EMPTY;
     }
 
     public void dropNewBlock(char piece1, char piece2) {
@@ -113,13 +111,13 @@ public class Board {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
-                char cell = pieceAt(row, col);
+                char piece = pieceAt(row, col);
                 if (falling != null && falling.hasPieceAt(row, col)) {
-                    cell = falling.pieceAt(row, col);
-                } else if (cell == EMPTY) {
-                    cell = '.';
+                    piece = falling.pieceAt(row, col);
+                } else if (piece == Block.EMPTY) {
+                    piece = '.';
                 }
-                sb.append(cell);
+                sb.append(piece);
             }
             sb.append('\n');
         }

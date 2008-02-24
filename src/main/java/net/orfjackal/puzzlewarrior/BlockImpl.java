@@ -1,7 +1,5 @@
 package net.orfjackal.puzzlewarrior;
 
-import static net.orfjackal.puzzlewarrior.Board.EMPTY;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
  * @author Esko Luontola
  * @since 24.2.2008
  */
-public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
+public class BlockImpl implements FallingBlock, Comparable<Block> {
 
     private static final int DIM = 3;
     private static final int CENTER = 1;
@@ -41,9 +39,17 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
         this.centerCol = centerCol;
     }
 
+    public int centerRow() {
+        return centerRow;
+    }
+
+    public int centerCol() {
+        return centerCol;
+    }
+
     public boolean hasPieceAt(int boardRow, int boardCol) {
-        return Math.abs(this.centerRow - boardRow) <= 1
-                && Math.abs(this.centerCol - boardCol) <= 1
+        return Math.abs(centerRow - boardRow) <= CENTER
+                && Math.abs(centerCol - boardCol) <= CENTER
                 && pieceAt(boardRow, boardCol) != EMPTY;
     }
 
@@ -51,16 +57,6 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
         int shapeRow = toShapeRow(boardRow);
         int shapeCol = toShapeCol(boardCol);
         return shape[shapeRow][shapeCol];
-    }
-
-    public void copyTo(char[][] board) {
-        for (int row = 0; row < shape.length; row++) {
-            for (int col = 0; col < shape[row].length; col++) {
-                if (shape[row][col] != EMPTY) {
-                    board[toBoardRow(row)][toBoardCol(col)] = shape[row][col];
-                }
-            }
-        }
     }
 
     public boolean canMoveDown(Board board) {
@@ -242,11 +238,11 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
         return copy;
     }
 
-    public int compareTo(BlockImpl other) {
-        if (other.centerRow == this.centerRow && other.centerCol == this.centerCol) {
+    public int compareTo(Block other) {
+        if (other.centerRow() == centerRow && other.centerCol() == centerCol) {
             assert other == this : other + " has the same position as " + this;
         }
-        return (other.centerRow < this.centerRow || other.centerCol < this.centerCol) ? -1 : 1;
+        return (other.centerRow() < centerRow || other.centerCol() < centerCol) ? -1 : 1;
     }
 
     public String toString() {

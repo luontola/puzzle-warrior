@@ -6,11 +6,15 @@ package net.orfjackal.puzzlewarrior;
  */
 public interface Block {
 
+    char EMPTY = '\0';
+
+    int centerRow();
+
+    int centerCol();
+
     boolean hasPieceAt(int boardRow, int boardCol);
 
     char pieceAt(int boardRow, int boardCol);
-
-    void copyTo(char[][] board);
 
     boolean canMoveDown(Board board);
 
