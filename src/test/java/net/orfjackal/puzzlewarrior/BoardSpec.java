@@ -434,6 +434,13 @@ public class BoardSpec extends Specification<Board> {
                                                  "....g.\n"));
         }
 
+        public void explodeExplosiveBlocksOfTheSameColor() {
+            BlockImpl b1 = new BlockImpl('G', EMPTY, 0, 1);
+            BlockImpl b2 = new BlockImpl('G', EMPTY, 0, 2);
+            specify(b1.canExplode(b2));
+            specify(b2.canExplode(b1));
+        }
+
         public void doNotExplodeBlocksOfADifferentColor() {
             board.dropNewBlock('G', 'b');
             board.tick(3);
@@ -444,7 +451,14 @@ public class BoardSpec extends Specification<Board> {
                                                  "...bg.\n"));
         }
 
-        public void sequentalComboExplosionsArePossible() {
+        public void normalBlocksDoNotExplodeByThemselves() {
+            BlockImpl b1 = new BlockImpl('g', 'g', 0, 1);
+            BlockImpl b2 = new BlockImpl('g', 'g', 0, 2);
+            specify(!b1.canExplode(b2));
+            specify(!b2.canExplode(b1));
+        }
+
+        public void sequentialComboExplosionsArePossible() {
             board.dropNewBlock('B', 'G');
             board.tick(2);
             specify(should.be.falling());
@@ -475,20 +489,6 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "......\n" +
                                                  "......\n"));
-        }
-
-        public void nonExplosiveBlocksCanNotExplodeAnything() {
-            BlockImpl b1 = new BlockImpl('g', 'g', 0, 1);
-            BlockImpl b2 = new BlockImpl('g', 'g', 0, 2);
-            specify(!b1.canExplode(b2));
-            specify(!b2.canExplode(b1));
-        }
-
-        public void nonExplosiveBlocksCanExplodeExplosiveBlocks() {
-            BlockImpl b1 = new BlockImpl('G', EMPTY, 0, 1);
-            BlockImpl b2 = new BlockImpl('G', EMPTY, 0, 2);
-            specify(b1.canExplode(b2));
-            specify(b2.canExplode(b1));
         }
     }
 
