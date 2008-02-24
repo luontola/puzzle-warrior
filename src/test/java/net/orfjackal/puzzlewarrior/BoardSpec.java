@@ -307,7 +307,31 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        // TODO: will not move/rotate when hitting another block
+        public void willNotMoveNorRotateWhenHittingAnotherBlock() {
+            board.moveLeft();
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "..g...\n" +
+                                                 "..b...\n"));
+            board.dropNewBlock('r', 'y');
+            board.tick(2);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...y..\n" +
+                                                 "..gr..\n" +
+                                                 "..b...\n"));
+            board.moveLeft();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...y..\n" +
+                                                 "..gr..\n" +
+                                                 "..b...\n"));
+            board.rotateCounterClockwise();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...y..\n" +
+                                                 "..gr..\n" +
+                                                 "..b...\n"));
+        }
+        
         // TODO: explosive blocks blow same color
         // TODO: explosive diamonds blow touched color
     }
