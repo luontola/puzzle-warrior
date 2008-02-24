@@ -27,14 +27,15 @@ public class BlockPair {
     }
 
     public char blockAt(int row, int col) {
-        int tRow = 1 - this.row + row;
-        int tCol = 1 - this.col + col;
-        return shape[tRow][tCol];
+        int shapeRow = 1 - this.row + row;
+        int shapeCol = 1 - this.col + col;
+        return shape[shapeRow][shapeCol];
     }
 
     public boolean containsBlockAt(int row, int col) {
-        return col == this.col
-                && (row == this.row || row == this.row - 1);
+        return Math.abs(this.row - row) <= 1
+                && Math.abs(this.col - col) <= 1
+                && blockAt(row, col) != Board.EMPTY;
     }
 
     public boolean canMoveDown(Board board) {
