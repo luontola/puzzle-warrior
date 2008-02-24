@@ -106,6 +106,10 @@ public class Block {
         shape = rotateCounterClockwise(shape);
     }
 
+    public void flip() {
+        shape = flip(shape);
+    }
+
     private static char[][] rotateClockwise(char[][] shape) {
         char[][] rotated = new char[3][3];
         for (int row = 0; row < shape.length; row++) {
@@ -124,6 +128,31 @@ public class Block {
             }
         }
         return rotated;
+    }
+
+    private static char[][] flip(char[][] shape) {
+        char[][] flipped = deepCopy(shape);
+        int otherRow = -1;
+        int otherCol = -1;
+        for (int row = 0; row < flipped.length; row++) {
+            for (int col = 0; col < flipped[row].length; col++) {
+                if (flipped[row][col] == EMPTY) {
+                    // ignore empty pieces
+                } else if (otherRow < 0 || otherCol < 0) {
+                    // found first piece
+                    otherRow = row;
+                    otherCol = col;
+                } else {
+                    // found second piece, switch it with the first piece
+                    char tmp = flipped[otherRow][otherCol];
+                    flipped[otherRow][otherCol] = flipped[row][col];
+                    flipped[row][col] = tmp;
+                    otherRow = -1;
+                    otherCol = -1;
+                }
+            }
+        }
+        return flipped;
     }
 
     private boolean collidesWith(Board board) {
@@ -193,8 +222,8 @@ public class Block {
 
     private static boolean notEmpty(char[][] shape) {
         for (char[] rows : shape) {
-            for (char cell : rows) {
-                if (cell != EMPTY) {
+            for (char piece : rows) {
+                if (piece != EMPTY) {
                     return true;
                 }
             }

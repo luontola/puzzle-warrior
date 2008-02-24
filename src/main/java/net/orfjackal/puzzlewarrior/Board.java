@@ -91,6 +91,10 @@ public class Board {
         }
     }
 
+    public void flip() {
+        falling.flip();
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < board.length; row++) {

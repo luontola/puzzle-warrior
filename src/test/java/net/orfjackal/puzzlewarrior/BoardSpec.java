@@ -220,6 +220,33 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
+        public void mayBeFlipped() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.flip();
+            specify(board.toString(), does.equal("...b..\n" +
+                                                 "...g..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
+        public void mayBeFlippedSideways() {
+            board.tick();
+            board.rotateClockwise();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...bg.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.flip();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...gb.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
         public void willNotMoveLeftWhenHittingAWall() {
             board.moveLeft();
             board.moveLeft();
