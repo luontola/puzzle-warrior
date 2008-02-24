@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
  * @since 23.2.2008
  */
 @RunWith(JDaveRunner.class)
-public class BoardSpec extends Specification<Board> {
+public class BoardAndBlocksSpec extends Specification<Board> {
 
     private Board board;
 
