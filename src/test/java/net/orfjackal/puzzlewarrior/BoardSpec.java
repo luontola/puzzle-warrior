@@ -460,9 +460,22 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-//        public void simultaneousComboExplosionsArePossible() {
-//            specify();
-//        }
+        public void simultaneousComboExplosionsArePossible() {
+            board.dropNewBlock('B', 'G');
+            board.rotateClockwise();
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...BG.\n" +
+                                                 "...bg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
 
         public void nonExplosiveBlocksCanNotExplodeAnything() {
             BlockImpl b1 = new BlockImpl('g', 'g', 0, 1);
