@@ -75,18 +75,26 @@ public class Board {
     }
 
     public void moveLeft() {
-        falling.moveLeft();
+        if (falling.canMoveLeft(this)) {
+            falling.moveLeft();
+        }
     }
 
     public void moveRight() {
-        falling.moveRight();
+        if (falling.canMoveRight(this)) {
+            falling.moveRight();
+        }
     }
 
-    public void rotateRight() {
-        falling.rotateRight();
+    public void rotateClockwise() {
+        if (falling.canRotateClockwise(this)) {
+            falling.rotateClockwise();
+        }
     }
 
-    public void rotateLeft() {
-        falling.rotateLeft();
+    public void rotateCounterClockwise() {
+        if (falling.canRotateCounterClockwise(this)) {
+            falling.rotateCounterClockwise();
+        }
     }
 }

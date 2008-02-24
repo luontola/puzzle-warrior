@@ -21,10 +21,10 @@ public class BlockPair {
         this.centerCol = col;
     }
 
-    private BlockPair(char[][] shape, int centerRow, int centerCol) {
-        this.shape = shape.clone();
-        this.centerRow = centerRow;
-        this.centerCol = centerCol;
+    private BlockPair(BlockPair other) {
+        this.shape = other.shape.clone();
+        this.centerRow = other.centerRow;
+        this.centerCol = other.centerCol;
     }
 
     public boolean hasBlockAt(int boardRow, int boardCol) {
@@ -50,7 +50,32 @@ public class BlockPair {
     }
 
     public boolean canMoveDown(Board board) {
-        BlockPair test = new BlockPair(shape, centerRow + 1, centerCol);
+        BlockPair test = new BlockPair(this);
+        test.moveDown();
+        return !test.collidesWith(board);
+    }
+
+    public boolean canMoveLeft(Board board) {
+        BlockPair test = new BlockPair(this);
+        test.moveLeft();
+        return !test.collidesWith(board);
+    }
+
+    public boolean canMoveRight(Board board) {
+        BlockPair test = new BlockPair(this);
+        test.moveRight();
+        return !test.collidesWith(board);
+    }
+
+    public boolean canRotateClockwise(Board board) {
+        BlockPair test = new BlockPair(this);
+        test.rotateClockwise();
+        return !test.collidesWith(board);
+    }
+
+    public boolean canRotateCounterClockwise(Board board) {
+        BlockPair test = new BlockPair(this);
+        test.rotateCounterClockwise();
         return !test.collidesWith(board);
     }
 
@@ -66,15 +91,15 @@ public class BlockPair {
         centerCol++;
     }
 
-    public void rotateRight() {
-        shape = rotateRight(shape);
+    public void rotateClockwise() {
+        shape = rotateClockwise(shape);
     }
 
-    public void rotateLeft() {
-        shape = rotateLeft(shape);
+    public void rotateCounterClockwise() {
+        shape = rotateCounterClockwise(shape);
     }
 
-    private static char[][] rotateRight(char[][] shape) {
+    private static char[][] rotateClockwise(char[][] shape) {
         char[][] rotated = new char[3][3];
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
@@ -84,7 +109,7 @@ public class BlockPair {
         return rotated;
     }
 
-    private char[][] rotateLeft(char[][] shape) {
+    private static char[][] rotateCounterClockwise(char[][] shape) {
         char[][] rotated = new char[3][3];
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
@@ -98,7 +123,7 @@ public class BlockPair {
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] != Board.EMPTY) {
-                    if (outsideBoard(board, row) || collidesWith(board, row, col)) {
+                    if (outside(board, row, col) || collidesWith(board, row, col)) {
                         return true;
                     }
                 }
@@ -107,14 +132,16 @@ public class BlockPair {
         return false;
     }
 
-    private boolean collidesWith(Board board, int shapeRow, int chapeCol) {
+    private boolean outside(Board board, int shapeRow, int shapeCol) {
         int row = toBoardRow(shapeRow);
-        int col = toBoardCol(chapeCol);
-        return board.blockAt(row, col) != Board.EMPTY;
+        int col = toBoardCol(shapeCol);
+        return row >= board.rows() || col < 0 || col >= board.columns();
     }
 
-    private boolean outsideBoard(Board board, int row) {
-        return toBoardRow(row) >= board.rows();
+    private boolean collidesWith(Board board, int shapeRow, int shapeCol) {
+        int row = toBoardRow(shapeRow);
+        int col = toBoardCol(shapeCol);
+        return row >= 0 && board.blockAt(row, col) != Board.EMPTY;
     }
 
     private int toShapeCol(int boardCol) {
