@@ -1,6 +1,5 @@
 package net.orfjackal.puzzlewarrior;
 
-import java.util.Arrays;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -14,14 +13,12 @@ public class Board {
 
     private final int rows;
     private final int columns;
-    private char[][] board;
+    private final SortedSet<Block> stopped = new TreeSet<Block>();
     private FallingBlock falling;
-    private SortedSet<Block> stopped = new TreeSet<Block>();
 
     public Board(int rows, int columns) {
         this.rows = rows;
         this.columns = columns;
-        board = new char[rows][columns];
     }
 
     public boolean falling() {
@@ -37,7 +34,12 @@ public class Board {
     }
 
     public char pieceAt(int row, int col) {
-        return board[row][col];
+        for (Block b : stopped) {
+            if (b.hasPieceAt(row, col)) {
+                return b.pieceAt(row, col);
+            }
+        }
+        return EMPTY;
     }
 
     public void dropNewBlock(char piece1, char piece2) {
@@ -66,15 +68,17 @@ public class Board {
     }
 
     private void stopFalling() {
-        Block[] columns = falling.breakToPieces();
-        Arrays.sort(columns);
-        for (Block b : columns) {
+        stopped.addAll(falling.breakToPieces());
+        falling = null;
+        packStopped();
+    }
+
+    private void packStopped() {
+        for (Block b : stopped) {
             while (b.canMoveDown(this)) {
                 b.moveDown();
             }
-            b.copyTo(board);
         }
-        falling = null;
     }
 
     public void moveLeft() {

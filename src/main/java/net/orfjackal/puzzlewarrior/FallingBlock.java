@@ -1,5 +1,7 @@
 package net.orfjackal.puzzlewarrior;
 
+import java.util.List;
+
 /**
  * @author Esko Luontola
  * @since 24.2.2008
@@ -24,5 +26,5 @@ public interface FallingBlock extends Block {
 
     void flip();
 
-    Block[] breakToPieces();
+    List<Block> breakToPieces();
 }

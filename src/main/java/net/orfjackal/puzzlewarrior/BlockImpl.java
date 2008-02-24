@@ -3,6 +3,7 @@ package net.orfjackal.puzzlewarrior;
 import static net.orfjackal.puzzlewarrior.Board.EMPTY;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -203,8 +204,8 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
         return shapeRow + (centerRow - CENTER);
     }
 
-    public Block[] breakToPieces() {
-        List<BlockImpl> pieces = new ArrayList<BlockImpl>();
+    public List<Block> breakToPieces() {
+        List<Block> pieces = new ArrayList<Block>();
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[0].length; col++) {
                 char[][] piece = singlePieceCentered(row, col, shape);
@@ -213,7 +214,7 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
                 }
             }
         }
-        return pieces.toArray(new BlockImpl[pieces.size()]);
+        return pieces;
     }
 
     private static char[][] singlePieceCentered(int row, int col, char[][] shape) {
@@ -243,8 +244,12 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
 
     public int compareTo(BlockImpl other) {
         if (other.centerRow == this.centerRow && other.centerCol == this.centerCol) {
-            assert other == this;
+            assert other == this : other + " has the same position as " + this;
         }
         return (other.centerRow < this.centerRow || other.centerCol < this.centerCol) ? -1 : 1;
+    }
+
+    public String toString() {
+        return "BlockImpl[centerRow=" + centerRow + ", centerCol=" + centerCol + ", shape=" + Arrays.deepToString(shape) + "]";
     }
 }
