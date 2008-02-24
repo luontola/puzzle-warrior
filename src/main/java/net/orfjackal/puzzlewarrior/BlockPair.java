@@ -58,6 +58,14 @@ public class BlockPair {
         centerRow++;
     }
 
+    public void moveLeft() {
+        centerCol--;
+    }
+
+    public void moveRight() {
+        centerCol++;
+    }
+
     public void rotateRight() {
         shape = rotateRight(shape);
     }

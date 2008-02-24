@@ -15,6 +15,22 @@ public class Board {
         board = new char[rows][cols];
     }
 
+    public boolean falling() {
+        return falling != null;
+    }
+
+    public int rows() {
+        return board.length;
+    }
+
+    public int columns() {
+        return board[0].length;
+    }
+
+    public char blockAt(int row, int col) {
+        return board[row][col];
+    }
+
     public void addBlock(char piece1, char piece2) {
         if (falling != null) {
             throw new IllegalStateException("There is already a falling block");
@@ -41,22 +57,6 @@ public class Board {
         }
     }
 
-    public boolean falling() {
-        return falling != null;
-    }
-
-    public int rows() {
-        return board.length;
-    }
-
-    public int columns() {
-        return board[0].length;
-    }
-
-    public char blockAt(int row, int col) {
-        return board[row][col];
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < board.length; row++) {
@@ -72,6 +72,14 @@ public class Board {
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+    public void moveLeft() {
+        falling.moveLeft();
+    }
+
+    public void moveRight() {
+        falling.moveRight();
     }
 
     public void rotateRight() {

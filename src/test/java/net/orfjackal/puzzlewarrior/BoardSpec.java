@@ -168,7 +168,32 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        // TODO: rotations
+        public void mayBeMovedLeft() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.moveLeft();
+            specify(board.toString(), does.equal("..g...\n" +
+                                                 "..b...\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
+        public void mayBeMovedRight() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.moveRight();
+            specify(board.toString(), does.equal("....g.\n" +
+                                                 "....b.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
         // TODO: breaks when hits blocks sideways
         // TODO: move left and right
         // TODO: move down
