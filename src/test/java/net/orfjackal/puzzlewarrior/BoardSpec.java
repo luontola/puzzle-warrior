@@ -558,3 +558,9 @@ public class BoardSpec extends Specification<Board> {
 // crash gem = explosive block
 // rainbow gem = diamond block
 // counter gem
+
+// Videos:
+// + http://www.youtube.com/watch?v=1-t5MYDIlwI
+// http://www.youtube.com/watch?v=YsuaonMxbD0
+// http://www.youtube.com/watch?v=8cS6e8Ar-78
+// http://www.youtube.com/watch?v=0u9cPbF5TDk
