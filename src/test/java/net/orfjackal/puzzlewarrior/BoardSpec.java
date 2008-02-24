@@ -347,21 +347,21 @@ public class BoardSpec extends Specification<Board> {
             return board;
         }
 
-//        public void explodeBlocksOfTheSameColorWhenTouchingThem() {
-//            board.dropNewBlock('B', 'g');
-//            board.tick(2);
-//            specify(should.be.falling());
-//            specify(board.toString(), does.equal("......\n" +
-//                                                 "...g..\n" +
-//                                                 "...B..\n" +
-//                                                 "...bg.\n"));
-//            board.tick();
-//            specify(should.not().be.falling());
-//            specify(board.toString(), does.equal("......\n" +
-//                                                 "......\n" +
-//                                                 "......\n" +
-//                                                 "...gg.\n"));
-//        }
+        public void explodeBlocksOfTheSameColorWhenTouchingThem() {
+            board.dropNewBlock('B', 'g');
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...g..\n" +
+                                                 "...B..\n" +
+                                                 "...bg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "...gg.\n"));
+        }
 
         public void doNothingWhenTouchingBlocksOfADifferentColor() {
             board.dropNewBlock('G', 'b');

@@ -1,7 +1,6 @@
 package net.orfjackal.puzzlewarrior;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Esko Luontola
@@ -68,15 +67,57 @@ public class Board {
     private void stopFalling() {
         stopped.addAll(falling.breakToPieces());
         falling = null;
-        packStopped();
+        pack();
     }
 
-    private void packStopped() {
+    private void pack() {
         for (Block b : stopped) {
             while (b.canMoveDown(this)) {
                 b.moveDown();
             }
         }
+        if (stopped.removeAll(findExploding())) {
+            pack();
+        }
+    }
+
+    private ArrayList<Block> findExploding() {
+        ArrayList<Block> exploding = new ArrayList<Block>();
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (isExplosive(pieceAt(row, col))) {
+                    exploding.addAll(findExplodableChainedTo(row, col));
+                }
+            }
+        }
+        return exploding;
+    }
+
+    private Collection<Block> findExplodableChainedTo(int row, int col) {
+        Block explosive = blockAt(row, col);
+        List<Block> chained = new ArrayList<Block>();
+        for (Block block : stopped) {
+            if (explosive.canExplode(block)) {
+                chained.add(block);
+            }
+        }
+        if (chained.size() > 0) {
+            chained.add(explosive);
+        }
+        return chained;
+    }
+
+    private Block blockAt(int row, int col) {
+        for (Block block : stopped) {
+            if (block.hasPieceAt(row, col)) {
+                return block;
+            }
+        }
+        return null;
+    }
+
+    private static boolean isExplosive(char piece) {
+        return Character.isUpperCase(piece);
     }
 
     public void moveLeft() {

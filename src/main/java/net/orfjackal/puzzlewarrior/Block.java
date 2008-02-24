@@ -16,6 +16,12 @@ public interface Block {
 
     char pieceAt(int boardRow, int boardCol);
 
+    char type();
+
+    boolean touches(Block other);
+
+    boolean canExplode(Block other);
+
     boolean canMoveDown(Board board);
 
     void moveDown();

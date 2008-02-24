@@ -59,6 +59,56 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return shape[shapeRow][shapeCol];
     }
 
+    public char type() {
+        char type = 0;
+        for (char[] rows : shape) {
+            for (char piece : rows) {
+                if (piece != EMPTY) {
+                    assert type == 0 || type == piece;
+                    type = piece;
+                }
+            }
+        }
+        assert type != 0;
+        return type;
+    }
+
+    public boolean touches(Block other) {
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != EMPTY) {
+                    int boardRow = toBoardRow(row);
+                    int boardCol = toBoardCol(col);
+                    return other.hasPieceAt(boardRow + 1, boardCol)
+                            || other.hasPieceAt(boardRow - 1, boardCol);
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean canExplode(Block other) {
+        char type = type();
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != EMPTY) {
+                    int boardRow = toBoardRow(row);
+                    int boardCol = toBoardCol(col);
+                    if (other.hasPieceAt(boardRow + 1, boardCol)) {
+                        if (canBeExplodedByType(type, other)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean canBeExplodedByType(char explosiveType, Block block) {
+        return Character.toLowerCase(explosiveType) == block.type();
+    }
+
     public boolean canMoveDown(Board board) {
         BlockImpl test = new BlockImpl(this);
         test.moveDown();
@@ -240,12 +290,13 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
 
     public int compareTo(Block other) {
         if (other.centerRow() == centerRow && other.centerCol() == centerCol) {
-            assert other == this : other + " has the same position as " + this;
+            return 0;
         }
         return (other.centerRow() < centerRow || other.centerCol() < centerCol) ? -1 : 1;
     }
 
     public String toString() {
-        return "BlockImpl[centerRow=" + centerRow + ", centerCol=" + centerCol + ", shape=" + Arrays.deepToString(shape) + "]";
+        return "BlockImpl@" + Integer.toHexString(System.identityHashCode(this))
+                + "[centerRow=" + centerRow + ", centerCol=" + centerCol + ", shape=" + Arrays.deepToString(shape) + "]";
     }
 }
