@@ -121,6 +121,32 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
                 || other.hasPieceAt(boardRow, boardCol - 1);
     }
 
+    public boolean collidesWith(Board board) {
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[row].length; col++) {
+                if (shape[row][col] != EMPTY) {
+                    if (outside(board, row, col) || collidesWith(board, row, col)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean outside(Board board, int shapeRow, int shapeCol) {
+        int row = toBoardRow(shapeRow);
+        int col = toBoardCol(shapeCol);
+        return row >= board.rows() || col < 0 || col >= board.columns();
+    }
+
+    private boolean collidesWith(Board board, int shapeRow, int shapeCol) {
+        int row = toBoardRow(shapeRow);
+        int col = toBoardCol(shapeCol);
+        // it is allowed for the block to be partly above the board, so the board row may be negative
+        return row >= 0 && board.pieceAt(row, col) != EMPTY;
+    }
+
     public boolean canMoveDown(Board board) {
         BlockImpl test = new BlockImpl(this);
         test.moveDown();
@@ -220,32 +246,6 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return flipped;
     }
 
-    private boolean collidesWith(Board board) {
-        for (int row = 0; row < shape.length; row++) {
-            for (int col = 0; col < shape[row].length; col++) {
-                if (shape[row][col] != EMPTY) {
-                    if (outside(board, row, col) || collidesWith(board, row, col)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean outside(Board board, int shapeRow, int shapeCol) {
-        int row = toBoardRow(shapeRow);
-        int col = toBoardCol(shapeCol);
-        return row >= board.rows() || col < 0 || col >= board.columns();
-    }
-
-    private boolean collidesWith(Board board, int shapeRow, int shapeCol) {
-        int row = toBoardRow(shapeRow);
-        int col = toBoardCol(shapeCol);
-        // it is allowed for the block to be partly above the board, so the board row may be negative
-        return row >= 0 && board.pieceAt(row, col) != EMPTY;
-    }
-
     private int toShapeCol(int boardCol) {
         return boardCol - (centerCol - CENTER);
     }
@@ -300,6 +300,11 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return copy;
     }
 
+    /**
+     * When sorted, blocks closer to the bottom of the board will be first in the list.
+     * This makes it easier to implement {@link Board#pack()}, since those in the bottom
+     * of the board should be moved down first.
+     */
     public int compareTo(Block other) {
         int rowDiff = centerRow - other.centerRow();
         int colDiff = centerCol - other.centerCol();

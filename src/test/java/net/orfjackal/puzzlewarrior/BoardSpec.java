@@ -27,6 +27,26 @@ public class BoardSpec extends Specification<Board> {
         }
     }
 
+    public class AFullBoard {
+
+        public Board create() {
+            board = new Board(2, 2);
+            board.dropNewBlock('b', 'g');
+            board.tick(2);
+            specify(board.toString(), does.equal(".g\n" +
+                                                 ".b\n"));
+            return board;
+        }
+
+        public void gameEndsWhenNoMoreBlocksWillFit() {
+            specify(new Block() {
+                public void run() throws Throwable {
+                    board.dropNewBlock('r', 'y');
+                }
+            }, does.raise(BoardIsFullException.class));
+        }
+    }
+
     public class AFallingBlock {
 
         public Board create() {

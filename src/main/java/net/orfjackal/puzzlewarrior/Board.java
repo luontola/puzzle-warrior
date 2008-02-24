@@ -42,13 +42,17 @@ public class Board {
         return Block.EMPTY;
     }
 
-    public void dropNewBlock(char piece1, char piece2) {
+    public void dropNewBlock(char piece1, char piece2) throws BoardIsFullException {
         if (falling()) {
             throw new IllegalStateException("There is already a falling block");
         }
         int row = 0;
         int col = columns() / 2;
-        falling = new BlockImpl(piece1, piece2, row, col);
+        FallingBlock block = new BlockImpl(piece1, piece2, row, col);
+        if (block.collidesWith(this)) {
+            throw new BoardIsFullException();
+        }
+        falling = block;
     }
 
     public void tick(int count) {

@@ -8,6 +8,8 @@ import java.util.List;
  */
 public interface FallingBlock extends Block {
 
+    boolean collidesWith(Board board);
+
     boolean canMoveLeft(Board board);
 
     boolean canMoveRight(Board board);
