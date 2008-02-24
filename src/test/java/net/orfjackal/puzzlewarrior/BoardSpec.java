@@ -307,6 +307,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
+        // TODO: will not move/rotate when hitting another block
         // TODO: explosive blocks blow same color
         // TODO: explosive diamonds blow touched color
     }
