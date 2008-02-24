@@ -6,7 +6,7 @@ package net.orfjackal.puzzlewarrior;
  */
 public interface Block {
 
-    char EMPTY = '\0';
+    final char EMPTY = '\0';
 
     int centerRow();
 
@@ -18,9 +18,13 @@ public interface Block {
 
     char type();
 
-    boolean touches(Block other);
+    boolean sameTypeAs(Block other);
+
+    boolean isExplosive();
 
     boolean canExplode(Block other);
+
+    boolean touches(Block other);
 
     boolean canMoveDown(Board board);
 

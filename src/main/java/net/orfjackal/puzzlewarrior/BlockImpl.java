@@ -73,31 +73,29 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return type;
     }
 
+    public boolean sameTypeAs(Block other) {
+        return Character.toLowerCase(type()) == Character.toLowerCase(other.type());
+    }
+
+    public boolean isExplosive() {
+        return Character.isUpperCase(type());
+    }
+
+    public boolean canExplode(Block other) {
+        return this.touches(other) && typeCanExplodeOtherType(type(), other.type());
+    }
+
+    private static boolean typeCanExplodeOtherType(char explosiveType, char otherType) {
+        return Character.isUpperCase(explosiveType)
+                && explosiveType == Character.toUpperCase(otherType);
+    }
+
     public boolean touches(Block other) {
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] != EMPTY) {
-                    int boardRow = toBoardRow(row);
-                    int boardCol = toBoardCol(col);
-                    return other.hasPieceAt(boardRow + 1, boardCol)
-                            || other.hasPieceAt(boardRow - 1, boardCol);
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean canExplode(Block other) {
-        char type = type();
-        for (int row = 0; row < shape.length; row++) {
-            for (int col = 0; col < shape[row].length; col++) {
-                if (shape[row][col] != EMPTY) {
-                    int boardRow = toBoardRow(row);
-                    int boardCol = toBoardCol(col);
-                    if (other.hasPieceAt(boardRow + 1, boardCol)) {
-                        if (canBeExplodedByType(type, other)) {
-                            return true;
-                        }
+                    if (nextTo(row, col, other)) {
+                        return true;
                     }
                 }
             }
@@ -105,8 +103,13 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return false;
     }
 
-    private static boolean canBeExplodedByType(char explosiveType, Block block) {
-        return Character.toLowerCase(explosiveType) == block.type();
+    private boolean nextTo(int row, int col, Block other) {
+        int boardRow = toBoardRow(row);
+        int boardCol = toBoardCol(col);
+        return other.hasPieceAt(boardRow + 1, boardCol)
+                || other.hasPieceAt(boardRow - 1, boardCol)
+                || other.hasPieceAt(boardRow, boardCol + 1)
+                || other.hasPieceAt(boardRow, boardCol - 1);
     }
 
     public boolean canMoveDown(Board board) {

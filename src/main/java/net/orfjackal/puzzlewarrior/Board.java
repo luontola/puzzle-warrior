@@ -1,6 +1,9 @@
 package net.orfjackal.puzzlewarrior;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * @author Esko Luontola
@@ -81,24 +84,22 @@ public class Board {
         }
     }
 
-    private ArrayList<Block> findExploding() {
-        ArrayList<Block> exploding = new ArrayList<Block>();
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < columns; col++) {
-                if (isExplosive(pieceAt(row, col))) {
-                    exploding.addAll(findExplodableChainedTo(row, col));
-                }
+    private List<Block> findExploding() {
+        List<Block> exploding = new ArrayList<Block>();
+        for (Block block : stopped) {
+            if (block.isExplosive()) {
+                exploding.addAll(findExplodableNextTo(block));
             }
         }
+        addChainedBlocksTo(exploding);
         return exploding;
     }
 
-    private Collection<Block> findExplodableChainedTo(int row, int col) {
-        Block explosive = blockAt(row, col);
+    private List<Block> findExplodableNextTo(Block explosive) {
         List<Block> chained = new ArrayList<Block>();
-        for (Block block : stopped) {
-            if (explosive.canExplode(block)) {
-                chained.add(block);
+        for (Block b : stopped) {
+            if (explosive.canExplode(b)) {
+                chained.add(b);
             }
         }
         if (chained.size() > 0) {
@@ -107,17 +108,22 @@ public class Board {
         return chained;
     }
 
-    private Block blockAt(int row, int col) {
-        for (Block block : stopped) {
-            if (block.hasPieceAt(row, col)) {
-                return block;
-            }
+    private void addChainedBlocksTo(List<Block> blocks) {
+        for (int i = 0; i < blocks.size(); i++) {
+            List<Block> chained = findSameColoredNextTo(blocks.get(i));
+            chained.removeAll(blocks);
+            blocks.addAll(chained);
         }
-        return null;
     }
 
-    private static boolean isExplosive(char piece) {
-        return Character.isUpperCase(piece);
+    private List<Block> findSameColoredNextTo(Block block) {
+        List<Block> chained = new ArrayList<Block>();
+        for (Block b : stopped) {
+            if (block.touches(b) && block.sameTypeAs(b)) {
+                chained.add(b);
+            }
+        }
+        return chained;
     }
 
     public void moveLeft() {

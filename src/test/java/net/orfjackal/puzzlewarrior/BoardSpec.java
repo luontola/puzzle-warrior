@@ -3,6 +3,7 @@ package net.orfjackal.puzzlewarrior;
 import jdave.Block;
 import jdave.Specification;
 import jdave.junit4.JDaveRunner;
+import static net.orfjackal.puzzlewarrior.Block.EMPTY;
 import org.junit.runner.RunWith;
 
 /**
@@ -347,7 +348,7 @@ public class BoardSpec extends Specification<Board> {
             return board;
         }
 
-        public void explodeBlocksOfTheSameColorWhenTouchingThem() {
+        public void explodeBlocksOfTheSameColorWhenAboveThem() {
             board.dropNewBlock('B', 'g');
             board.tick(2);
             specify(should.be.falling());
@@ -363,7 +364,77 @@ public class BoardSpec extends Specification<Board> {
                                                  "...gg.\n"));
         }
 
-        public void doNothingWhenTouchingBlocksOfADifferentColor() {
+        public void explodeBlocksOfTheSameColorWhenBelowThem() {
+            board.dropNewBlock('G', 'g');
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...g..\n" +
+                                                 "...G..\n" +
+                                                 "...bg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "...bg.\n"));
+        }
+
+        public void explodeBlocksOfTheSameColorWhenOnTheirLeft() {
+            board.dropNewBlock('B', 'g');
+            board.moveLeft();
+            board.tick(3);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "..g...\n" +
+                                                 "..Bbg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "..g.g.\n"));
+        }
+
+        public void explodeBlocksOfTheSameColorWhenOnTheirRight() {
+            board.dropNewBlock('G', 'b');
+            board.moveRight();
+            board.moveRight();
+            board.tick(3);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 ".....b\n" +
+                                                 "...bgG\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "...b.b\n"));
+        }
+
+        public void explodeChainedBlocksOfTheSameColor() {
+            board.dropNewBlock('B', 'b');
+            board.rotateClockwise();
+            board.moveLeft();
+            board.moveLeft();
+            board.tick(3);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 ".Bbbg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "....g.\n"));
+        }
+
+        public void doNotExplodeBlocksOfADifferentColor() {
             board.dropNewBlock('G', 'b');
             board.tick(3);
             specify(should.not().be.falling());
@@ -373,8 +444,40 @@ public class BoardSpec extends Specification<Board> {
                                                  "...bg.\n"));
         }
 
+        public void sequentalComboExplosionsArePossible() {
+            board.dropNewBlock('B', 'G');
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...G..\n" +
+                                                 "...B..\n" +
+                                                 "...bg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
+//        public void simultaneousComboExplosionsArePossible() {
+//            specify();
+//        }
+
+        public void nonExplosiveBlocksCanNotExplodeAnything() {
+            BlockImpl b1 = new BlockImpl('g', 'g', 0, 1);
+            BlockImpl b2 = new BlockImpl('g', 'g', 0, 2);
+            specify(!b1.canExplode(b2));
+            specify(!b2.canExplode(b1));
+        }
+
+        public void nonExplosiveBlocksCanExplodeExplosiveBlocks() {
+            BlockImpl b1 = new BlockImpl('G', EMPTY, 0, 1);
+            BlockImpl b2 = new BlockImpl('G', EMPTY, 0, 2);
+            specify(b1.canExplode(b2));
+            specify(b2.canExplode(b1));
+        }
     }
 
-    // TODO: explosive blocks blow same color
     // TODO: explosive diamonds blow touched color
 }
