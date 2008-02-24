@@ -9,7 +9,7 @@ public class Board {
     public static final char EMPTY = '\0';
 
     private char[][] board;
-    private BlockPair falling;
+    private Shape falling;
 
     public Board(int rows, int cols) {
         board = new char[rows][cols];
@@ -31,13 +31,13 @@ public class Board {
         return board[row][col];
     }
 
-    public void addBlock(char piece1, char piece2) {
-        if (falling != null) {
+    public void addFallingBlock(char piece1, char piece2) {
+        if (falling()) {
             throw new IllegalStateException("There is already a falling block");
         }
         int row = 0;
         int col = columns() / 2;
-        falling = new BlockPair(piece1, piece2, row, col);
+        falling = new Shape(piece1, piece2, row, col);
     }
 
     public void tick(int count) {
@@ -47,31 +47,24 @@ public class Board {
     }
 
     public void tick() {
-        if (falling != null) {
+        if (falling()) {
             if (falling.canMoveDown(this)) {
                 falling.moveDown();
             } else {
-                falling.copyTo(board);
-                falling = null;
+                stopFalling();
             }
         }
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                char cell = board[row][col];
-                if (falling != null && falling.hasBlockAt(row, col)) {
-                    cell = falling.blockAt(row, col);
-                } else if (cell == EMPTY) {
-                    cell = '.';
-                }
-                sb.append(cell);
+    private void stopFalling() {
+        Shape[] columns = falling.breakToColumns();
+        for (Shape c : columns) {
+            while (c.canMoveDown(this)) {
+                c.moveDown();
             }
-            sb.append('\n');
+            c.copyTo(board);
         }
-        return sb.toString();
+        falling = null;
     }
 
     public void moveLeft() {
@@ -96,5 +89,22 @@ public class Board {
         if (falling.canRotateCounterClockwise(this)) {
             falling.rotateCounterClockwise();
         }
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[row].length; col++) {
+                char cell = board[row][col];
+                if (falling != null && falling.hasBlockAt(row, col)) {
+                    cell = falling.blockAt(row, col);
+                } else if (cell == EMPTY) {
+                    cell = '.';
+                }
+                sb.append(cell);
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
     }
 }

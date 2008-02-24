@@ -30,7 +30,7 @@ public class BoardSpec extends Specification<Board> {
 
         public Board create() {
             board = new Board(4, 6);
-            board.addBlock('b', 'g');
+            board.addFallingBlock('b', 'g');
             return board;
         }
 
@@ -87,7 +87,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n" +
                                                  "...g..\n" +
                                                  "...b..\n"));
-            board.addBlock('r', 'y');
+            board.addFallingBlock('r', 'y');
             specify(board.toString(), does.equal("...r..\n" +
                                                  "......\n" +
                                                  "...g..\n" +
@@ -106,6 +106,32 @@ public class BoardSpec extends Specification<Board> {
                                                  "...b..\n"));
         }
 
+        public void breaksOnHittingAnotherBlockSideways() {
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.addFallingBlock('r', 'y');
+            board.rotateClockwise();
+            specify(board.toString(), does.equal("...ry.\n" +
+                                                 "......\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.tick();
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...ry.\n" +
+                                                 "...g..\n" +
+                                                 "...b..\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...r..\n" +
+                                                 "...g..\n" +
+                                                 "...by.\n"));
+        }
+
         public void atMostOneBlockMayBeFallingAtATime() {
             specify(board.toString(), does.equal("...b..\n" +
                                                  "......\n" +
@@ -113,7 +139,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
             specify(new Block() {
                 public void run() throws Throwable {
-                    board.addBlock('r', 'y');
+                    board.addFallingBlock('r', 'y');
                 }
             }, does.raise(IllegalStateException.class));
             specify(board.toString(), does.equal("...b..\n" +
@@ -254,7 +280,6 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        // TODO: breaks when hits blocks sideways
         // TODO: explosive blocks blow same color
         // TODO: explosive diamonds blow touched color
     }
