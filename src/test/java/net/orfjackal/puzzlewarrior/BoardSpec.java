@@ -331,9 +331,6 @@ public class BoardSpec extends Specification<Board> {
                                                  "..gr..\n" +
                                                  "..b...\n"));
         }
-        
-        // TODO: explosive blocks blow same color
-        // TODO: explosive diamonds blow touched color
     }
 
     public class ExplosiveBlocks {
@@ -377,4 +374,7 @@ public class BoardSpec extends Specification<Board> {
         }
 
     }
+
+    // TODO: explosive blocks blow same color
+    // TODO: explosive diamonds blow touched color
 }
