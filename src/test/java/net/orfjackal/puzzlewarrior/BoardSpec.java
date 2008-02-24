@@ -552,6 +552,7 @@ public class BoardSpec extends Specification<Board> {
 }
 
 // TODO: game ending (event?)
+// TODO: GUI
 // TODO: counting points (event?)
 // TODO: counter gems (start from 5, need to drop 5 gems before turns into a normal gem)
 // TODO: counter gems explode if near to a crash gem
