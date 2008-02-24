@@ -6,12 +6,10 @@ package net.orfjackal.puzzlewarrior;
  */
 public class Board {
 
-    private static final char EMPTY = '\0';
+    public static final char EMPTY = '\0';
 
     private char[][] board;
-    private char[][] falling;
-    private int fallingRow;
-    private int fallingCol;
+    private BlockPair falling;
 
     public Board(int rows, int cols) {
         board = new char[rows][cols];
@@ -21,13 +19,9 @@ public class Board {
         if (falling != null) {
             throw new IllegalStateException("There is already a falling block");
         }
-        falling = new char[][]{
-                {0, piece2, 0},
-                {0, piece1, 0},
-                {0, 0, 0},
-        };
-        fallingRow = 0;
-        fallingCol = board[0].length / 2;
+        int row = 0;
+        int col = columns() / 2;
+        falling = new BlockPair(piece1, piece2, row, col);
     }
 
     public void tick(int count) {
@@ -37,28 +31,30 @@ public class Board {
     }
 
     public void tick() {
-        if (fallingBlockIsOnLastRow() || fallingBlockWouldCollide()) {
-            stopFalling();
+        if (falling != null) {
+            if (falling.canMoveDown(this)) {
+                falling.moveDown();
+            } else {
+                falling.copyTo(board);
+                falling = null;
+            }
         }
-        fallingRow++;
-    }
-
-    private boolean fallingBlockIsOnLastRow() {
-        return fallingRow == board.length - 1;
-    }
-
-    private boolean fallingBlockWouldCollide() {
-        return board[fallingRow + 1][fallingCol] != EMPTY;
     }
 
     public boolean falling() {
         return falling != null;
     }
 
-    private void stopFalling() {
-        board[fallingRow - 1][fallingCol] = falling[0][1];
-        board[fallingRow][fallingCol] = falling[1][1];
-        falling = null;
+    public int rows() {
+        return board.length;
+    }
+
+    public int columns() {
+        return board[0].length;
+    }
+
+    public char blockAt(int row, int col) {
+        return board[row][col];
     }
 
     public String toString() {
@@ -66,8 +62,8 @@ public class Board {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 char cell = board[row][col];
-                if (containsFallingBlock(row, col)) {
-                    cell = fallingBlockFrom(row);
+                if (falling != null && falling.containsBlockAt(row, col)) {
+                    cell = falling.blockAt(row, col);
                 } else if (cell == EMPTY) {
                     cell = '.';
                 }
@@ -76,17 +72,6 @@ public class Board {
             sb.append('\n');
         }
         return sb.toString();
-    }
-
-    private boolean containsFallingBlock(int row, int col) {
-        return falling != null
-                && col == fallingCol
-                && (row == fallingRow || row == fallingRow - 1);
-    }
-
-    private char fallingBlockFrom(int row) {
-        int i = 1 - fallingRow + row;
-        return falling[i][1];
     }
 
     public void rotateRight() {
