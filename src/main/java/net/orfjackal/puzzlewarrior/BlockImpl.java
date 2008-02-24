@@ -9,7 +9,7 @@ import java.util.List;
  * @author Esko Luontola
  * @since 24.2.2008
  */
-public class BlockImpl implements FallingBlock {
+public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
 
     // row and col are relative to the center of shape
     private char[][] shape;
@@ -197,22 +197,24 @@ public class BlockImpl implements FallingBlock {
         return this.centerRow + shapeRow - 1;
     }
 
-    public Block[] breakToColumns() {
+    public Block[] breakToPieces() {
         List<BlockImpl> pieces = new ArrayList<BlockImpl>();
-        for (int col = 0; col < shape[0].length; col++) {
-            char[][] broken = clearColumnsOtherThan(col, shape);
-            if (notEmpty(broken)) {
-                pieces.add(new BlockImpl(broken, centerRow, centerCol));
+        for (int row = 0; row < shape.length; row++) {
+            for (int col = 0; col < shape[0].length; col++) {
+                char[][] broken = clearPiecesOtherThan(row, col, shape);
+                if (notEmpty(broken)) {
+                    pieces.add(new BlockImpl(broken, centerRow, centerCol));
+                }
             }
         }
         return pieces.toArray(new BlockImpl[pieces.size()]);
     }
 
-    private static char[][] clearColumnsOtherThan(int colToKeep, char[][] shape) {
+    private static char[][] clearPiecesOtherThan(int rowToKeep, int colToKeep, char[][] shape) {
         char[][] cleared = deepCopy(shape);
         for (int row = 0; row < cleared.length; row++) {
             for (int col = 0; col < cleared[row].length; col++) {
-                if (col != colToKeep) {
+                if (row != rowToKeep || col != colToKeep) {
                     cleared[row][col] = EMPTY;
                 }
             }
@@ -237,5 +239,9 @@ public class BlockImpl implements FallingBlock {
             copy[i] = array[i].clone();
         }
         return copy;
+    }
+
+    public int compareTo(BlockImpl other) {
+        return (other.centerRow < this.centerRow || other.centerCol < this.centerCol) ? -1 : 1;
     }
 }

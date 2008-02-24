@@ -24,5 +24,5 @@ public interface FallingBlock extends Block {
 
     void flip();
 
-    Block[] breakToColumns();
+    Block[] breakToPieces();
 }

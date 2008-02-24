@@ -1,5 +1,6 @@
 package net.orfjackal.puzzlewarrior;
 
+import java.util.Arrays;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -65,7 +66,8 @@ public class Board {
     }
 
     private void stopFalling() {
-        Block[] columns = falling.breakToColumns();
+        Block[] columns = falling.breakToPieces();
+        Arrays.sort(columns);
         for (Block b : columns) {
             while (b.canMoveDown(this)) {
                 b.moveDown();
