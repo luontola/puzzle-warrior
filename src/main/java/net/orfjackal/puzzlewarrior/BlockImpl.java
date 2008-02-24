@@ -13,8 +13,9 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
     private static final int DIM = 3;
     private static final int CENTER = 1;
 
-    // row and col are relative to the center of shape
+    // row and column are relative to the center of shape
     private char[][] shape;
+    private final char type;
     private int centerRow;
     private int centerCol;
 
@@ -35,6 +36,7 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         assert shape.length == DIM;
         assert shape[0].length == DIM;
         this.shape = deepCopy(shape);
+        this.type = calculateType(shape);
         this.centerRow = centerRow;
         this.centerCol = centerCol;
     }
@@ -60,16 +62,24 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
     }
 
     public char type() {
+        assert type != 0 : "Asking for the type of a still falling block is not allowed, " +
+                "because it may consist of pieces of different types.";
+        return type;
+    }
+
+    private static char calculateType(char[][] shape) {
         char type = 0;
         for (char[] rows : shape) {
             for (char piece : rows) {
                 if (piece != EMPTY) {
-                    assert type == 0 || type == piece;
-                    type = piece;
+                    if (type == 0 || type == piece) {
+                        type = piece;
+                    } else {
+                        return 0; // unable to deterine type
+                    }
                 }
             }
         }
-        assert type != 0;
         return type;
     }
 
@@ -77,17 +87,16 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
         return Character.toLowerCase(type()) == Character.toLowerCase(other.type());
     }
 
+    public boolean isDiamond() {
+        return type() == DIAMOND;
+    }
+
     public boolean isExplosive() {
         return Character.isUpperCase(type());
     }
 
     public boolean canExplode(Block other) {
-        return this.touches(other) && typeCanExplodeOtherType(type(), other.type());
-    }
-
-    private static boolean typeCanExplodeOtherType(char explosiveType, char otherType) {
-        return Character.isUpperCase(explosiveType)
-                && explosiveType == Character.toUpperCase(otherType);
+        return isExplosive() && sameTypeAs(other) && touches(other);
     }
 
     public boolean touches(Block other) {
@@ -292,10 +301,13 @@ public class BlockImpl implements FallingBlock, Comparable<Block> {
     }
 
     public int compareTo(Block other) {
-        if (other.centerRow() == centerRow && other.centerCol() == centerCol) {
-            return 0;
+        int rowDiff = centerRow - other.centerRow();
+        int colDiff = centerCol - other.centerCol();
+        if (rowDiff != 0) {
+            return rowDiff;
+        } else {
+            return colDiff;
         }
-        return (other.centerRow() < centerRow || other.centerCol() < centerCol) ? -1 : 1;
     }
 
     public String toString() {

@@ -79,23 +79,64 @@ public class Board {
                 b.moveDown();
             }
         }
-        if (stopped.removeAll(findExploding())) {
+        if (stopped.removeAll(explodingBlocks())) {
             pack();
         }
     }
 
-    private List<Block> findExploding() {
+    private List<Block> explodingBlocks() {
         List<Block> exploding = new ArrayList<Block>();
         for (Block block : stopped) {
+            if (block.isDiamond()) {
+                exploding.addAll(explodableByDiamond(block));
+            }
             if (block.isExplosive()) {
-                exploding.addAll(findExplodableNextTo(block));
+                exploding.addAll(explodableNextTo(block));
             }
         }
         addChainedBlocksTo(exploding);
         return exploding;
     }
 
-    private List<Block> findExplodableNextTo(Block explosive) {
+    private List<Block> explodableByDiamond(Block diamond) {
+        assert diamond.isDiamond();
+        List<Block> explode = new ArrayList<Block>();
+        explode.add(diamond);
+        explode.addAll(targettedByDiamond(diamond));
+        return explode;
+    }
+
+    private List<Block> targettedByDiamond(Block diamond) {
+        List<Block> targets = new ArrayList<Block>();
+        Block targetType = blockBelow(diamond);
+        if (targetType != null) {
+            targets.addAll(blocksOfType(targetType));
+        }
+        return targets;
+    }
+
+    private Block blockBelow(Block other) {
+        Block below = null;
+        for (Block b : stopped) {
+            if (other.touches(b) && other.centerRow() < b.centerRow()) {
+                assert below == null;
+                below = b;
+            }
+        }
+        return below;
+    }
+
+    private List<Block> blocksOfType(Block type) {
+        List<Block> list = new ArrayList<Block>();
+        for (Block b : stopped) {
+            if (b.sameTypeAs(type)) {
+                list.add(b);
+            }
+        }
+        return list;
+    }
+
+    private List<Block> explodableNextTo(Block explosive) {
         List<Block> chained = new ArrayList<Block>();
         for (Block b : stopped) {
             if (explosive.canExplode(b)) {

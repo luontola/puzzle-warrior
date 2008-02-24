@@ -6,7 +6,8 @@ package net.orfjackal.puzzlewarrior;
  */
 public interface Block {
 
-    final char EMPTY = '\0';
+    char EMPTY = '\0';
+    char DIAMOND = '*';
 
     int centerRow();
 
@@ -19,6 +20,8 @@ public interface Block {
     char type();
 
     boolean sameTypeAs(Block other);
+
+    boolean isDiamond();
 
     boolean isExplosive();
 

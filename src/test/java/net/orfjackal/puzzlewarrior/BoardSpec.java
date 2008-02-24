@@ -492,5 +492,61 @@ public class BoardSpec extends Specification<Board> {
         }
     }
 
-    // TODO: explosive diamonds blow touched color
+    public class DiamondBlocks {
+
+        public Board create() {
+            board = new Board(4, 6);
+            board.dropNewBlock('b', 'g');
+            board.rotateClockwise();
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "...bg.\n"));
+            board.dropNewBlock('b', 'g');
+            board.rotateClockwise();
+            board.moveLeft();
+            board.moveLeft();
+            board.tick(4);
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 ".bgbg.\n"));
+            return board;
+        }
+
+        public void explodeAllBlocksOfAColorWhenAboveOneOfThem() {
+            board.dropNewBlock('*', 'r');
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...r..\n" +
+                                                 "...*..\n" +
+                                                 ".bgbg.\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 "..grg.\n"));
+        }
+        
+        public void explodeOnlySelfWhenAboveNothing() {
+            board.dropNewBlock('*', 'r');
+            board.moveRight();
+            board.moveRight();
+            board.tick(3);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 ".....r\n" +
+                                                 ".bgbg*\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "......\n" +
+                                                 ".bgbgr\n"));
+        }
+    }
 }
