@@ -62,7 +62,7 @@ public class Board {
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[row].length; col++) {
                 char cell = board[row][col];
-                if (falling != null && falling.containsBlockAt(row, col)) {
+                if (falling != null && falling.hasBlockAt(row, col)) {
                     cell = falling.blockAt(row, col);
                 } else if (cell == EMPTY) {
                     cell = '.';
@@ -75,5 +75,10 @@ public class Board {
     }
 
     public void rotateRight() {
+        falling.rotateRight();
+    }
+
+    public void rotateLeft() {
+        falling.rotateLeft();
     }
 }

@@ -49,7 +49,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        public void stopsWhenItReachesTheBottom() {
+        public void stopsOnReachingTheBottom() {
             board.tick(3);
             specify(should.be.falling());
             specify(board.toString(), does.equal("......\n" +
@@ -64,7 +64,24 @@ public class BoardSpec extends Specification<Board> {
                                                  "...b..\n"));
         }
 
-        public void stopsWhenItHitsAnotherBlock() {
+        public void stopsOnReachingTheBottomWhenRotated() {
+            board.rotateRight();
+            board.rotateRight();
+            board.tick(2);
+            specify(should.be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...b..\n" +
+                                                 "...g..\n"));
+            board.tick();
+            specify(should.not().be.falling());
+            specify(board.toString(), does.equal("......\n" +
+                                                 "......\n" +
+                                                 "...b..\n" +
+                                                 "...g..\n"));
+        }
+
+        public void stopsOnHittingAnotherBlock() {
             board.tick(4);
             specify(board.toString(), does.equal("......\n" +
                                                  "......\n" +
@@ -105,18 +122,51 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-//        public void mayBeRotatedClockwise() {
-//            board.tick();
-//            specify(board.toString(), does.equal("...g..\n" +
-//                                                 "...b..\n" +
-//                                                 "......\n" +
-//                                                 "......\n"));
-//            board.rotateRight();
-//            specify(board.toString(), does.equal("......\n" +
-//                                                 "...bg.\n" +
-//                                                 "......\n" +
-//                                                 "......\n"));
-//        }
+        public void mayBeRotatedClockwise() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.rotateRight();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...bg.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.rotateRight();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...b..\n" +
+                                                 "...g..\n" +
+                                                 "......\n"));
+            board.rotateRight();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "..gb..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
+        public void mayBeRotatedCounterClockwise() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.rotateLeft();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "..gb..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.rotateLeft();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...b..\n" +
+                                                 "...g..\n" +
+                                                 "......\n"));
+            board.rotateLeft();
+            specify(board.toString(), does.equal("......\n" +
+                                                 "...bg.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
 
         // TODO: rotations
         // TODO: breaks when hits blocks sideways
