@@ -34,7 +34,7 @@ public class BoardSpec extends Specification<Board> {
             return board;
         }
 
-        public void startsFromTheTopMiddle() {
+        public void startsFromTheTopCenter() {
             specify(board.toString(), does.equal("...b..\n" +
                                                  "......\n" +
                                                  "......\n" +
@@ -64,7 +64,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "...b..\n"));
         }
 
-        public void stopsOnReachingTheBottomWhenRotated() {
+        public void stopsOnReachingTheBottomUpsideDown() {
             board.rotateClockwise();
             board.rotateClockwise();
             board.tick(2);
@@ -148,6 +148,32 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
+        public void mayBeMovedLeft() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.moveLeft();
+            specify(board.toString(), does.equal("..g...\n" +
+                                                 "..b...\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
+        public void mayBeMovedRight() {
+            board.tick();
+            specify(board.toString(), does.equal("...g..\n" +
+                                                 "...b..\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+            board.moveRight();
+            specify(board.toString(), does.equal("....g.\n" +
+                                                 "....b.\n" +
+                                                 "......\n" +
+                                                 "......\n"));
+        }
+
         public void mayBeRotatedClockwise() {
             board.tick();
             specify(board.toString(), does.equal("...g..\n" +
@@ -194,33 +220,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        public void mayBeMovedLeft() {
-            board.tick();
-            specify(board.toString(), does.equal("...g..\n" +
-                                                 "...b..\n" +
-                                                 "......\n" +
-                                                 "......\n"));
-            board.moveLeft();
-            specify(board.toString(), does.equal("..g...\n" +
-                                                 "..b...\n" +
-                                                 "......\n" +
-                                                 "......\n"));
-        }
-
-        public void mayBeMovedRight() {
-            board.tick();
-            specify(board.toString(), does.equal("...g..\n" +
-                                                 "...b..\n" +
-                                                 "......\n" +
-                                                 "......\n"));
-            board.moveRight();
-            specify(board.toString(), does.equal("....g.\n" +
-                                                 "....b.\n" +
-                                                 "......\n" +
-                                                 "......\n"));
-        }
-
-        public void willNotMoveLeftOverTheBoard() {
+        public void willNotMoveLeftWhenHittingAWall() {
             board.moveLeft();
             board.moveLeft();
             board.moveLeft();
@@ -235,7 +235,7 @@ public class BoardSpec extends Specification<Board> {
                                                  "......\n"));
         }
 
-        public void willNotMoveRightOverTheBoard() {
+        public void willNotMoveRightWhenHittingAWall() {
             board.moveRight();
             board.moveRight();
             specify(board.toString(), does.equal(".....b\n" +
