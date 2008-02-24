@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
 
+    private static final int DIM = 3;
+    private static final int CENTER = 1;
+
     // row and col are relative to the center of shape
     private char[][] shape;
     private int centerRow;
@@ -29,6 +32,9 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
     }
 
     private BlockImpl(char[][] shape, int centerRow, int centerCol) {
+        assert notEmpty(shape);
+        assert shape.length == DIM;
+        assert shape[0].length == DIM;
         this.shape = deepCopy(shape);
         this.centerRow = centerRow;
         this.centerCol = centerCol;
@@ -111,20 +117,20 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
     }
 
     private static char[][] rotateClockwise(char[][] shape) {
-        char[][] rotated = new char[3][3];
+        char[][] rotated = new char[DIM][DIM];
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
-                rotated[col][2 - row] = shape[row][col];
+                rotated[col][(DIM - 1) - row] = shape[row][col];
             }
         }
         return rotated;
     }
 
     private static char[][] rotateCounterClockwise(char[][] shape) {
-        char[][] rotated = new char[3][3];
+        char[][] rotated = new char[DIM][DIM];
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
-                rotated[2 - col][row] = shape[row][col];
+                rotated[(DIM - 1) - col][row] = shape[row][col];
             }
         }
         return rotated;
@@ -182,43 +188,37 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
     }
 
     private int toShapeCol(int boardCol) {
-        return 1 - this.centerCol + boardCol;
+        return boardCol - (centerCol - CENTER);
     }
 
     private int toShapeRow(int boardRow) {
-        return 1 - this.centerRow + boardRow;
+        return boardRow - (centerRow - CENTER);
     }
 
     private int toBoardCol(int shapeCol) {
-        return this.centerCol + shapeCol - 1;
+        return shapeCol + (centerCol - CENTER);
     }
 
     private int toBoardRow(int shapeRow) {
-        return this.centerRow + shapeRow - 1;
+        return shapeRow + (centerRow - CENTER);
     }
 
     public Block[] breakToPieces() {
         List<BlockImpl> pieces = new ArrayList<BlockImpl>();
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[0].length; col++) {
-                char[][] broken = clearPiecesOtherThan(row, col, shape);
-                if (notEmpty(broken)) {
-                    pieces.add(new BlockImpl(broken, centerRow, centerCol));
+                char[][] piece = singlePieceCentered(row, col, shape);
+                if (notEmpty(piece)) {
+                    pieces.add(new BlockImpl(piece, toBoardRow(row), toBoardCol(col)));
                 }
             }
         }
         return pieces.toArray(new BlockImpl[pieces.size()]);
     }
 
-    private static char[][] clearPiecesOtherThan(int rowToKeep, int colToKeep, char[][] shape) {
-        char[][] cleared = deepCopy(shape);
-        for (int row = 0; row < cleared.length; row++) {
-            for (int col = 0; col < cleared[row].length; col++) {
-                if (row != rowToKeep || col != colToKeep) {
-                    cleared[row][col] = EMPTY;
-                }
-            }
-        }
+    private static char[][] singlePieceCentered(int row, int col, char[][] shape) {
+        char[][] cleared = new char[DIM][DIM];
+        cleared[CENTER][CENTER] = shape[row][col];
         return cleared;
     }
 
@@ -242,6 +242,9 @@ public class BlockImpl implements FallingBlock, Comparable<BlockImpl> {
     }
 
     public int compareTo(BlockImpl other) {
+        if (other.centerRow == this.centerRow && other.centerCol == this.centerCol) {
+            assert other == this;
+        }
         return (other.centerRow < this.centerRow || other.centerCol < this.centerCol) ? -1 : 1;
     }
 }
