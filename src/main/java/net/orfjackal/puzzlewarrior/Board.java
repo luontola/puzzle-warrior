@@ -1,5 +1,8 @@
 package net.orfjackal.puzzlewarrior;
 
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 /**
  * @author Esko Luontola
  * @since 23.2.2008
@@ -8,11 +11,16 @@ public class Board {
 
     public static final char EMPTY = '\0';
 
+    private final int rows;
+    private final int columns;
     private char[][] board;
-    private Block falling;
+    private FallingBlock falling;
+    private SortedSet<Block> stopped = new TreeSet<Block>();
 
-    public Board(int rows, int cols) {
-        board = new char[rows][cols];
+    public Board(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
+        board = new char[rows][columns];
     }
 
     public boolean falling() {
@@ -20,11 +28,11 @@ public class Board {
     }
 
     public int rows() {
-        return board.length;
+        return rows;
     }
 
     public int columns() {
-        return board[0].length;
+        return columns;
     }
 
     public char pieceAt(int row, int col) {
@@ -37,7 +45,7 @@ public class Board {
         }
         int row = 0;
         int col = columns() / 2;
-        falling = new Block(piece1, piece2, row, col);
+        falling = new BlockImpl(piece1, piece2, row, col);
     }
 
     public void tick(int count) {
@@ -97,9 +105,9 @@ public class Board {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                char cell = board[row][col];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                char cell = pieceAt(row, col);
                 if (falling != null && falling.hasPieceAt(row, col)) {
                     cell = falling.pieceAt(row, col);
                 } else if (cell == EMPTY) {
