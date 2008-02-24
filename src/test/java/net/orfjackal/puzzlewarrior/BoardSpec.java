@@ -551,4 +551,10 @@ public class BoardSpec extends Specification<Board> {
     }
 }
 
-// TODO: timed blocks
+// TODO: counter gems (start from 5, need to drop 5 gems before turns into a normal gem)
+// TODO: counter gems explode if near to a crash gem
+
+// normal gem
+// crash gem = explosive block
+// rainbow gem = diamond block
+// counter gem
