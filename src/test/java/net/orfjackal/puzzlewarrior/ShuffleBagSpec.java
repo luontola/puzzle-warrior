@@ -22,7 +22,7 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
         public ShuffleBag<Integer> create() {
             bag = new ShuffleBag<Integer>(new Random(123L));
             for (Integer value : expectedValues) {
-                bag.put(value);
+                bag.add(value);
             }
             return bag;
         }
@@ -65,7 +65,7 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
             Integer[] additionalValues = {10, 11, 12, 13, 14, 15};
             List<Integer> values = bag.getMany(6);
             for (Integer i : additionalValues) {
-                bag.put(i);
+                bag.add(i);
             }
             values.addAll(bag.getMany(10));
             specify(values.size(), does.equal(expectedValues.length + additionalValues.length));
@@ -82,9 +82,9 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
 
         public ShuffleBag<Character> create() {
             bag = new ShuffleBag<Character>(new Random(123L));
-            bag.putMany('a', 1);
-            bag.putMany('b', 2);
-            bag.putMany('c', 3);
+            bag.addMany('a', 1);
+            bag.addMany('b', 2);
+            bag.addMany('c', 3);
             return bag;
         }
 
