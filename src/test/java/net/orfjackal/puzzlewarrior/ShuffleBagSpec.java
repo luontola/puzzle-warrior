@@ -27,12 +27,12 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
             return bag;
         }
 
-        public void allValuesAreReturnedOnce() {
+        public void onFirstRunAllValuesAreReturnedOnce() {
             List<Integer> values = bag.getMany(10);
             specify(values, does.containExactly(expectedValues));
         }
 
-        public void theReturnedValuesAreInRandomOrder() {
+        public void onFirstRunTheValuesAreInRandomOrder() {
             List<Integer> values = bag.getMany(10);
             specify(values, does.not().containInOrder(expectedValues));
             specify(values, does.not().containInPartialOrder(1, 2, 3));
@@ -52,7 +52,7 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
             specify(run3, does.containExactly(expectedValues));
         }
 
-        public void onFollowingRunsTheValuesAreInDifferentOrder() {
+        public void onFollowingRunsTheValuesAreInADifferentRandomOrderThanBefore() {
             List<Integer> run1 = bag.getMany(10);
             List<Integer> run2 = bag.getMany(10);
             List<Integer> run3 = bag.getMany(10);
