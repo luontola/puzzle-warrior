@@ -99,7 +99,7 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
         private ShuffleBag<Object> bag;
 
         public ShuffleBag<Object> create() {
-            bag = new ShuffleBag<Object>(new Random(123L));
+            bag = new ShuffleBag<Object>();
             return bag;
         }
 

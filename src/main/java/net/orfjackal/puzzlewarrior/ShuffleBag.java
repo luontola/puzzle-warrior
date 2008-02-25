@@ -14,6 +14,10 @@ public class ShuffleBag<T> {
     private final List<T> values = new ArrayList<T>();
     private int nextIndex = 0;
 
+    public ShuffleBag() {
+        this(new Random());
+    }
+
     public ShuffleBag(Random random) {
         this.random = random;
     }
