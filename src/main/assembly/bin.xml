@@ -5,6 +5,7 @@
     <formats>
         <format>zip</format>
     </formats>
+    <baseDirectory>${project.name} ${version}</baseDirectory>
     <files>
         <file>
             <source>target/${artifactId}-${version}.jar</source>
