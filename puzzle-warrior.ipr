@@ -285,6 +285,24 @@
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
   <component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="BootLoader" type="Application" factoryName="Application" enabled="false" merge="false">
+      <option name="MAIN_CLASS_NAME" value="net.orfjackal.tools.BootLoader" />
+      <option name="VM_PARAMETERS" value="-Djava.library.path=lib/natives-win32" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="puzzle-warrior" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method>
+        <option name="Make" value="true" />
+      </method>
+    </configuration>
     <configuration default="false" name="All tests" type="JUnit" factoryName="JUnit" enabled="false" merge="false">
       <module name="puzzle-warrior" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -527,6 +545,20 @@
       <option name="fileLocation" value="1" />
       <option name="useAlternate" value="false" />
     </LanguageOptions>
+  </component>
+  <component name="libraryTable">
+    <library name="Slick">
+      <CLASSES>
+        <root url="file://$PROJECT_DIR$/lib" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/slick-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/slick-tools-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/slick-util-src.zip!/" />
+      </SOURCES>
+      <jarDirectory url="file://$PROJECT_DIR$/lib" recursive="false" />
+    </library>
   </component>
   <UsedPathMacros>
     <macro name="M2_REPO" />

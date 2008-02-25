@@ -83,19 +83,24 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <descriptors>
-                        <descriptor>src/main/assembly/src.xml</descriptor>
-                    </descriptors>
                     <archive>
                         <manifest>
-                            <mainClass>net.orfjackal.puzzlewarrior.Main</mainClass>
+                            <mainClass>net.orfjackal.tools.BootLoader</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/src.xml</descriptor>
+                        <descriptor>src/main/assembly/bin.xml</descriptor>
+                    </descriptors>
                 </configuration>
                 <executions>
                     <execution>

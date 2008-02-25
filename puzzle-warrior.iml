@@ -160,6 +160,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Slick" level="project" />
     <orderEntryProperties />
   </component>
   <component name="copyright">
