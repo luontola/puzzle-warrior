@@ -34,17 +34,17 @@ public class Lotto {
 
         sano("- Ja lisänumerot...");
 
-        SortedSet<Integer> lisäNumerot = new TreeSet<Integer>();
+        SortedSet<Integer> lisänumerot = new TreeSet<Integer>();
         for (int i = 0; i < 3; i++) {
             lottokonePyörii();
             Integer numero = lottokone.get();
-            lisäNumerot.add(numero);
-            sano("- " + numero + ".\t" + numerot + " + " + lisäNumerot);
+            lisänumerot.add(numero);
+            sano("- " + numero + ".\t" + numerot + " + " + lisänumerot);
         }
 
         tauko();
         sano("- Tulos seitsemän oikein on " + numerot);
-        sano("  sekä lisänumerot " + lisäNumerot + ".");
+        sano("  sekä lisänumerot " + lisänumerot + ".");
     }
 
     private static void sano(String repliikki) throws InterruptedException {
