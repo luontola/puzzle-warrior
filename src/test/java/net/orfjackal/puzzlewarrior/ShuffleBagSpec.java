@@ -96,10 +96,10 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
 
     public class AnEmptyShuffleBag {
 
-        private ShuffleBag<Character> bag;
+        private ShuffleBag<Object> bag;
 
-        public ShuffleBag<Character> create() {
-            bag = new ShuffleBag<Character>(new Random(123L));
+        public ShuffleBag<Object> create() {
+            bag = new ShuffleBag<Object>(new Random(123L));
             return bag;
         }
 
