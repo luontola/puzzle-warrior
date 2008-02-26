@@ -13,8 +13,8 @@ public class ShuffleBag<T> {
     private final Random random;
 
     /**
-     * Used values are in the range {@code 0 <= index < cursor}.
-     * Unused values are in the range {@code cursor <= index < values.size()}.
+     * Unused values are in the range {@code 0 <= index < cursor}.
+     * Used values are in the range {@code cursor <= index < values.size()}.
      */
     private final List<T> values = new ArrayList<T>();
     private int cursor = 0;
@@ -42,12 +42,15 @@ public class ShuffleBag<T> {
     }
 
     private int randomUnused() {
-        return cursor + random.nextInt(values.size() - cursor);
+        if (cursor <= 0) {
+            cursor = values.size();
+        }
+        return random.nextInt(cursor);
     }
 
     private void markAsUsed(int indexOfUsed) {
+        cursor--;
         swap(values, indexOfUsed, cursor);
-        cursor = (cursor + 1) % values.size();
     }
 
     private static <T> void swap(List<T> list, int x, int y) {

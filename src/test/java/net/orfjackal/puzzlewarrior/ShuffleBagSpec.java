@@ -4,6 +4,8 @@ import jdave.Specification;
 import jdave.junit4.JDaveRunner;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +19,7 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
     public class AShuffleBagWithOneOfEachValue {
 
         private ShuffleBag<Integer> bag;
-        private Integer[] expectedValues = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+        private List<Integer> expectedValues = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
         public ShuffleBag<Integer> create() {
             bag = new ShuffleBag<Integer>(new Random(123L));
@@ -34,6 +36,9 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
 
         public void onFirstRunTheValuesAreInRandomOrder() {
             List<Integer> values = bag.getMany(10);
+            specify(values.get(0), does.not().equal(0));
+            specify(values.get(0), does.not().equal(1));
+            specify(values.get(0), does.not().equal(9));
             specify(values, does.not().containInOrder(expectedValues));
             specify(values, does.not().containInPartialOrder(1, 2, 3));
             specify(values, does.not().containInPartialOrder(4, 5, 6));
@@ -61,24 +66,28 @@ public class ShuffleBagSpec extends Specification<ShuffleBag<?>> {
             specify(run2, does.not().containInOrder(run3));
         }
 
-        public void moreValuesCanBeAddedWhileTheBagIsInUse() {
-            Integer[] additionalValues = {10, 11, 12, 13, 14, 15};
-            List<Integer> values = bag.getMany(6);
+        public void valuesAddedDuringARunWillBeIncludedInTheFollowingRun() {
+            List<Integer> additionalValues = Arrays.asList(10, 11, 12, 13, 14, 15);
+            List<Integer> expectedValues2 = new ArrayList<Integer>();
+            expectedValues2.addAll(expectedValues);
+            expectedValues2.addAll(additionalValues);
+
+            List<Integer> run1 = bag.getMany(5);
             for (Integer i : additionalValues) {
                 bag.add(i);
             }
-            values.addAll(bag.getMany(10));
-            specify(values.size(), does.equal(expectedValues.length + additionalValues.length));
-            specify(values, does.containAll(expectedValues));
-            specify(values, does.containAll(additionalValues));
-            specify(values, does.not().containInPartialOrder(additionalValues));
+            run1.addAll(bag.getMany(5));
+            List<Integer> run2 = bag.getMany(16);
+
+            specify(run1, does.containExactly(expectedValues));
+            specify(run2, does.containExactly(expectedValues2));
         }
     }
 
     public class AShuffleBagWithManyOfTheSameValue {
 
         private ShuffleBag<Character> bag;
-        private Character[] expectedValues = {'a', 'b', 'b', 'c', 'c', 'c'};
+        private List<Character> expectedValues = Arrays.asList('a', 'b', 'b', 'c', 'c', 'c');
 
         public ShuffleBag<Character> create() {
             bag = new ShuffleBag<Character>(new Random(123L));
