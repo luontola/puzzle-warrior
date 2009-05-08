@@ -10,19 +10,20 @@
 
     <name>Hyper Puzzle Warrior XVII Ultra</name>
     <description>A "Super Puzzle Fighter II Turbo" clone</description>
-    <url>http://www.orfjackal.net</url>
+    <url>http://github.com/orfjackal/puzzle-warrior</url>
     <inceptionYear>2008</inceptionYear>
 
     <developers>
         <developer>
             <id>orfjackal</id>
             <name>Esko Luontola</name>
+            <url>http://www.orfjackal.net/</url>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:svn:svn://tux/orfjackal/puzzle-warrior/trunk</connection>
-        <developerConnection>scm:svn:svn://tux/orfjackal/puzzle-warrior/trunk</developerConnection>
+        <connection>scm:git:git://github.com/orfjackal/puzzle-warrior.git</connection>
+        <url>http://github.com/orfjackal/puzzle-warrior</url>
     </scm>
 
     <repositories>
